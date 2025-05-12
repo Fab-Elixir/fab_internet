@@ -35,7 +35,7 @@ defmodule Fab.Internet.MixProject do
       authors: ["Anthony Smith"],
       licenses: ["MIT"],
       links: %{
-        Fab: "https://hexdocs.pm/fab",
+        Fab: "https://hexdocs.pm/fab/Fab.html",
         GitHub: "https://github.com/Fab-Elixir/fab_internet"
       }
     }
