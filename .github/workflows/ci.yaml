@@ -1,0 +1,120 @@
+name: ci
+on: push
+jobs:
+    dialyzer:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4.2.2
+
+            - id: beam
+              uses: erlef/setup-beam@v1.18.2
+              with:
+                  elixir-version: ${{ matrix.elixir }}
+                  otp-version: ${{ matrix.otp }}
+
+            - uses: actions/cache@v4.2.3
+              with:
+                  key: ${{ github.job }}-${{ steps.beam.outputs.elixir-version }}-${{ steps.beam.outputs.otp-version }}-${{ hashFiles('mix.lock') }}-1
+                  path: |
+                      _build/
+                      deps/
+
+            - run: mix deps.get
+
+            - run: mix compile --warnings-as-errors
+
+            - run: mix dialyzer
+        strategy:
+            matrix:
+                elixir:
+                    - 1.18.x
+                    - 1.17.x
+                    - 1.16.x
+                    - 1.15.x
+                    - 1.14.x
+
+                otp:
+                    - 27.x
+                    - 26.x
+                    - 25.x
+                    - 24.x
+
+                exclude:
+                    - elixir: 1.18.x
+                      otp: 24.x
+
+                    - elixir: 1.17.x
+                      otp: 24.x
+
+                    - elixir: 1.16.x
+                      otp: 27.x
+
+                    - elixir: 1.15.x
+                      otp: 27.x
+
+                    - elixir: 1.14.x
+                      otp: 27.x
+
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4.2.2
+
+            - id: beam
+              uses: erlef/setup-beam@v1.18.2
+              with:
+                  elixir-version: ${{ matrix.elixir }}
+                  otp-version: ${{ matrix.otp }}
+
+            - uses: actions/cache@v4.2.3
+              with:
+                  key: ${{ github.job }}-${{ steps.beam.outputs.elixir-version }}-${{ steps.beam.outputs.otp-version }}-${{ hashFiles('mix.lock') }}-1
+                  path: |
+                      _build/
+                      deps/
+
+            - run: mix deps.get
+
+            - run: mix compile --warnings-as-errors
+
+            - run: mix test
+        strategy:
+            matrix:
+                elixir:
+                    - 1.18.x
+                    - 1.17.x
+                    - 1.16.x
+                    - 1.15.x
+                    - 1.14.x
+
+                otp:
+                    - 27.x
+                    - 26.x
+                    - 25.x
+                    - 24.x
+
+                exclude:
+                    - elixir: 1.18.x
+                      otp: 24.x
+
+                    - elixir: 1.17.x
+                      otp: 24.x
+
+                    - elixir: 1.16.x
+                      otp: 27.x
+
+                    - elixir: 1.15.x
+                      otp: 27.x
+
+                    - elixir: 1.14.x
+                      otp: 27.x
+    release:
+        if: ${{ github.ref == 'refs/heads/main' }}
+        needs:
+            - dialyzer
+            - test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: googleapis/release-please-action@v4.2.0
+              with:
+                  token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
