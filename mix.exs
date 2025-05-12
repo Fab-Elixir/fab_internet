@@ -7,7 +7,8 @@ defmodule Fab.Internet.MixProject do
       version: "1.0.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      package: package()
     ]
   end
 
@@ -25,5 +26,15 @@ defmodule Fab.Internet.MixProject do
       {:ex_doc, "== 0.38.1", only: :dev, runtime: false},
       {:dialyxir, "== 1.4.5", only: :dev, runtime: false}
     ]
+  end
+
+  defp package do
+    %{
+      authors: ["Anthony Smith"],
+      licenses: ["MIT"],
+      links: %{
+        GitHub: "https://github.com/Fab-Elixir/fab_internet"
+      }
+    }
   end
 end
