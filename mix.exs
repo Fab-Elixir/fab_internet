@@ -4,6 +4,8 @@ defmodule Fab.Internet.MixProject do
   def project do
     [
       app: :fab_internet,
+      description:
+        "Fab.Internet is an Elixir library for generating random internet related data",
       version: "1.0.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
@@ -33,6 +35,7 @@ defmodule Fab.Internet.MixProject do
       authors: ["Anthony Smith"],
       licenses: ["MIT"],
       links: %{
+        Fab: "https://hexdocs.pm/fab",
         GitHub: "https://github.com/Fab-Elixir/fab_internet"
       }
     }
